@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DdlMappings">
+    <mapping uuid="0b3abcb3-7009-447d-9184-6405414dfc90" name="Tournament DDL Mapping">
+      <data-sources db="f4f5cc74-724f-404d-824a-dfc04428d10f" ddl="8d71f3e3-c630-45cc-bac7-93c4ac4ad211" />
+      <scope>
+        <node kind="schema" qname="main" />
+      </scope>
+    </mapping>
+  </component>
+  <component name="SqlDataSourceStorage">
+    <option name="dataSources">
+      <list>
+        <State>
+          <option name="id" value="ab1ee1ad-4806-484e-872e-305e99efacda" />
+          <option name="name" value="Tournament DDL" />
+          <option name="dbmsName" value="SQLITE" />
+          <option name="urls">
+            <array>
+              <option value="file://$PROJECT_DIR$/internal/database/create_db.ddl" />
+            </array>
+          </option>
+          <option name="outLayout" value="File per object by schema.groovy" />
+        </State>
+      </list>
+    </option>
+  </component>
+</project>
