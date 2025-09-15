@@ -1,0 +1,163 @@
+syntax = "proto3";
+
+option go_package = "internal/proto";
+
+message GameWrapper {
+  bytes data = 1;
+  bytes auth = 2;
+}
+
+message TournamentRound {
+  TournamentRound.RoundType type = 1;
+  uint32 numTeams = 2;
+  string displayName = 3;
+  uint32 roundNum = 4;
+  uint32 teamsPerAlliance = 5;
+  uint32 alliancesPerMatch = 6;
+  Game.Scoring scoring = 7;
+  TournamentRound.RankingType rankings = 8;
+  repeated Game.MatchTimeEntry matchTimes = 9;
+  repeated Game.MatchSound sounds = 10;
+  TournamentRound.RankingType leagueRankings = 11;
+  uint32 numAlliances = 12;
+  enum RoundType {
+    TOURNAMENTROUND_ROUNDTYPE_UNSPECIFIED = 0;
+    TOURNAMENTROUND_ROUNDTYPE_RANDOM_MATCHES = 1;
+    TOURNAMENTROUND_ROUNDTYPE_SINGLE_ELIM_WIN_2 = 2;
+    TOURNAMENTROUND_ROUNDTYPE_ROUND_ROBIN = 3;
+    TOURNAMENTROUND_ROUNDTYPE_TOP_N = 4;
+    TOURNAMENTROUND_ROUNDTYPE_TIERED_TOP_N = 5;
+  }
+  enum RankingType {
+    TOURNAMENTROUND_RANKINGTYPE_UNSPECIFIED = 0;
+    TOURNAMENTROUND_RANKINGTYPE_NO_RANKINGS = 1;
+    TOURNAMENTROUND_RANKINGTYPE_WP_SP = 2;
+    TOURNAMENTROUND_RANKINGTYPE_WIN_PCT_WP_SP = 3;
+    TOURNAMENTROUND_RANKINGTYPE_TOTAL_PTS_3_OF_4 = 4;
+    TOURNAMENTROUND_RANKINGTYPE_TOTAL_PTS_PREV_ROUND = 5;
+    TOURNAMENTROUND_RANKINGTYPE_WP_HEADTOHEAD_TOT_PTS = 6;
+    TOURNAMENTROUND_RANKINGTYPE_AVG_SCORE_HIGH_SCORES = 7;
+    TOURNAMENTROUND_RANKINGTYPE_AVG_PTS_3_OF_4 = 8;
+    TOURNAMENTROUND_RANKINGTYPE_WP_AP_SP = 9;
+    TOURNAMENTROUND_RANKINGTYPE_WIN_PCT_WP_AP_SP = 10;
+    TOURNAMENTROUND_RANKINGTYPE_TOTAL_PTS_WP = 11;
+    TOURNAMENTROUND_RANKINGTYPE_AVG_WP_AP_SP = 12;
+    TOURNAMENTROUND_RANKINGTYPE_AVG_WP_AVG_SCORE_HIGH_SCORES = 13;
+    TOURNAMENTROUND_RANKINGTYPE_TOTAL_PTS_OVERALL_SCORE_DROP_1 = 14;
+    TOURNAMENTROUND_RANKINGTYPE_AVG_PTS = 15;
+    TOURNAMENTROUND_RANKINGTYPE_AVG_PTS_DROP_1_OF_6 = 16;
+    TOURNAMENTROUND_RANKINGTYPE_AVG_PTS_3_OF_4_KEEP_NO_SHOW = 17;
+  }
+}
+
+message Game {
+  uint32 apiVersion = 1;
+  string uuid = 2;
+  uint32 version = 3;
+  Game.VexProgram program = 4;
+  string name = 5;
+  string season = 6;
+  repeated Game.MatchSound defaultSounds = 7;
+  Game.Scoring defaultScoring = 8;
+  repeated Game.MatchTimeEntry defaultMatchTimes = 9;
+  repeated TournamentRound rounds = 10;
+  repeated Game.Skills skills = 11;
+  bytes interfaceXml = 12;
+  repeated Game.SkillsRanking skillsRankings = 13;
+  repeated Game.ScoreObject skillsInitialObjectStates = 14;
+  string scoringModule = 15;
+  enum VexProgram {
+    GAME_VEXPROGRAM_UNSPECIFIED = 0;
+    GAME_VEXPROGRAM_VRC = 10;
+    GAME_VEXPROGRAM_VEXU = 20;
+    GAME_VEXPROGRAM_VEXIQ = 30;
+    GAME_VEXPROGRAM_VEXAI = 40;
+    GAME_VEXPROGRAM_RADC = 50;
+    GAME_VEXPROGRAM_BELL = 60;
+    GAME_VEXPROGRAM_TSA = 100;
+  }
+  message Scoring {
+    string matchScoreFormula = 1;
+    string allianceScoreFormula = 2;
+    string teamScoreFormula = 3;
+    repeated string scoringConstraints = 4;
+    string apFormula = 10;
+    string wpFormula = 11;
+    string spFormula = 12;
+    string awpFormula = 13;
+  }
+  message MatchTimeEntry {
+    int32 seconds = 1;
+    MatchTimeEntry.BlockType type = 2;
+    string name = 3;
+    enum BlockType {
+      MATCHTIMEENTRY_BLOCKTYPE_UNSPECIFIED = 0;
+      MATCHTIMEENTRY_BLOCKTYPE_TIMER_ONLY = 1;
+      MATCHTIMEENTRY_BLOCKTYPE_AUTONOMOUS = 2;
+      MATCHTIMEENTRY_BLOCKTYPE_DRIVER_CTRL = 3;
+      MATCHTIMEENTRY_BLOCKTYPE_PAUSE = 4;
+      MATCHTIMEENTRY_BLOCKTYPE_PRESTART = 5;
+    }
+  }
+  message MatchSound {
+    string state = 1;
+    string cause = 2;
+    string fileName = 3;
+    uint32 timeLeft = 4;
+  }
+  message ScoreObject {
+    string name = 1;
+    int32 val = 2;
+  }
+  message Skills {
+    uint32 obsolete_robotSkillsDuration = 1;
+    uint32 obsolete_progSkillsDuration = 2;
+    Game.Scoring scoring = 3;
+    repeated Skills.Ranking rankings = 4;
+    string name = 5;
+    repeated Game.MatchTimeEntry skillsTimes = 9;
+    repeated Game.MatchSound sounds = 10;
+    Skills.SkillsType skillsType = 11;
+    uint32 maxAttempts = 12;
+    enum SkillsType {
+      SKILLS_SKILLSTYPE_UNSPECIFIED = 0;
+      SKILLS_SKILLSTYPE_PROGRAMMING = 1;
+      SKILLS_SKILLSTYPE_DRIVER = 2;
+    }
+    message Ranking {
+      Ranking.Type type = 1;
+      string formula = 2;
+      enum Type {
+        RANKING_TYPE_UNSPECIFIED = 0;
+        RANKING_TYPE_HIGH_SCORES = 1;
+        RANKING_TYPE_HIGH_SCORE_FORMULA = 2;
+        RANKING_TYPE_TOTAL_POINTS_RECURSIVE = 3;
+      }
+    }
+  }
+  message SkillsRanking {
+    SkillsRanking.RankingType rankingType = 1;
+    SkillsRanking.SkillsType skillsType = 2;
+    string formula = 3;
+    uint32 num_scores = 4;
+    enum RankingType {
+      SKILLSRANKING_RANKINGTYPE_UNSPECIFIED = 0;
+      SKILLSRANKING_RANKINGTYPE_COMBINED_HIGH_SCORES = 1;
+      SKILLSRANKING_RANKINGTYPE_ALTERNATING_HIGH_SCORES = 2;
+      SKILLSRANKING_RANKINGTYPE_HIGH_SCORE_FORMULA = 3;
+      SKILLSRANKING_RANKINGTYPE_ALTERNATING_HIGH_SCORES_LIMIT_2 = 4;
+      SKILLSRANKING_RANKINGTYPE_STOP_TIME_SUM_FROM_HIGH_SCORE_MATCHES = 5;
+      SKILLSRANKING_RANKINGTYPE_STOP_TIME_FROM_HIGH_SCORE_MATCH = 6;
+      SKILLSRANKING_RANKINGTYPE_ALTERNATING_HIGH_SCORES_THIRD = 7;
+      SKILLSRANKING_RANKINGTYPE_STOP_TIME_SUM_FROM_SECOND_HIGHEST_SCORE_MATCHES = 8;
+      SKILLSRANKING_RANKINGTYPE_STOP_TIME_SUM_FROM_THIRD_HIGHEST_SCORE_MATCHES = 9;
+      SKILLSRANKING_RANKINGTYPE_SUM_THREE_DRIVER_ONE_PROGRAMMING = 10;
+      SKILLSRANKING_RANKINGTYPE_HIGH_SCORES_SAME_TYPE = 11;
+    }
+    enum SkillsType {
+      SKILLSRANKING_SKILLSTYPE_UNSPECIFIED = 0;
+      SKILLSRANKING_SKILLSTYPE_PROGRAMMING = 1;
+      SKILLSRANKING_SKILLSTYPE_DRIVER = 2;
+    }
+  }
+}
